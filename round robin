@@ -1,0 +1,63 @@
+#user/bin/python3
+
+array = []
+
+wait_time = 0
+
+n = int(raw_input('Enter the No. of Process : '))
+
+
+for i in xrange(n):
+	array.append([])
+
+	print ' '
+
+	array[i].append(raw_input('Enter Process Name please : ' ))
+
+	array[i].append(int(raw_input('Enter Arrival Time please :')))
+
+	array[i].append(int(raw_input('Enter Burst Time please :')))
+
+	array[i].append(int(raw_input('Enter Priority  please:')))
+	print ' '
+
+time_slice = int(raw_input('Enter the time slice for Process : '))
+
+array.sort(key = lambda array:(array[1],array[3]))
+
+total = 0
+wait = []
+finish = []
+dup = []
+
+for i in xrange(n):
+	finish.append(0)
+	total += array[i][2]
+	dup.append(array[i][2])
+	wait.append(0)
+
+
+j = 0
+l = 0
+
+while (l<total):
+	j = j % n
+	for k in xrange(time_slice):
+		if(dup[j] != 0):
+			dup[j] -= 1
+			l += 1
+			if (dup[j] == 0):
+				finish[j] = l + array[j][1] 
+				break
+	j += 1
+
+for i in xrange(n):
+	wait[i]  = finish[i] - array[i][1] - array[i][2]
+
+print 'Process Name \tArrival Time \t Burst Time \t  Waiting Time'
+for i in xrange(n):
+	print array[i][0] ,'\t\t' ,array[i][1] ,'\t\t', array[i][2], '\t\t',wait[i]
+	wait_time += wait[i]
+
+print 'Total Waiting Time : ',wait_time
+print 'Average Waiting Time : ',(wait_time/n)
